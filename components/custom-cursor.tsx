@@ -1,24 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isVisible, setIsVisible] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => {
-      const hasTouchScreen = "ontouchstart" in window || navigator.maxTouchPoints > 0
-      const isSmallScreen = window.innerWidth < 768
-      setIsMobile(hasTouchScreen || isSmallScreen)
-    }
-
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (isMobile) return
