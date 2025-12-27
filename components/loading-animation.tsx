@@ -148,16 +148,13 @@ export function LoadingAnimation() {
     <>
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-9999 flex items-center justify-center"
-        style={{
-          background: "#030917",
-        }}
+        className="fixed inset-0 z-9999 flex items-center justify-center bg-background"
       >
-        {/* Vinheta azul */}
+        {/* Vinheta com cor primária */}
         <div
           className="absolute inset-0"
           style={{
-            boxShadow: "inset 0 0 200px rgba(0, 102, 255, 0.15)",
+            boxShadow: "inset 0 0 200px hsl(var(--primary) / 0.15)",
           }}
         />
 
@@ -181,7 +178,7 @@ export function LoadingAnimation() {
         <div ref={textContainerRef} className="relative flex items-center justify-center gap-4">
           <span
             ref={mjRef}
-            className="text-7xl md:text-8xl font-bold text-white"
+            className="text-7xl md:text-8xl font-bold text-foreground"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             mj
@@ -189,7 +186,7 @@ export function LoadingAnimation() {
 
           <span
             ref={infinityRef}
-            className="text-7xl md:text-8xl font-bold text-white"
+            className="text-7xl md:text-8xl font-bold text-foreground"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             ∞
@@ -197,7 +194,7 @@ export function LoadingAnimation() {
 
           <span
             ref={loRef}
-            className="text-7xl md:text-8xl font-bold text-white"
+            className="text-7xl md:text-8xl font-bold text-foreground"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             lo
