@@ -41,6 +41,13 @@ const images = [
     title: "Aventura nas Montanhas",
     date: "Setembro 2023",
   },
+   {
+    id: 6,
+    src: "/lo.jpg",
+    alt: "Momento 6",
+    title: "Momento 6",
+    date: "Janeiro 2023",
+  },
 ]
 
 export default function ScrollGallery() {

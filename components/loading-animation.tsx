@@ -14,7 +14,6 @@ export function LoadingAnimation() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Set initial states
       gsap.set(infinityRef.current, { opacity: 0, scale: 0, rotation: -180 })
       gsap.set(loRef.current, { opacity: 0, x: 100, scale: 0.5 })
       gsap.set(mjRef.current, { opacity: 0, x: -100, scale: 0.5 })
@@ -26,7 +25,6 @@ export function LoadingAnimation() {
         },
       })
 
-      // Fase 1: "mj" entra com elastic
       tl.to(mjRef.current, {
         opacity: 1,
         x: 0,
@@ -35,7 +33,6 @@ export function LoadingAnimation() {
         ease: "elastic.out(1, 0.5)",
       })
 
-      // Fase 2: Container escala e "mj" se prepara
       tl.to(
         textContainerRef.current,
         {
@@ -46,7 +43,6 @@ export function LoadingAnimation() {
         "-=0.6"
       )
 
-      // Fase 3: ∞ aparece com rotação e escala
       tl.to(
         infinityRef.current,
         {
@@ -59,7 +55,6 @@ export function LoadingAnimation() {
         "-=0.3"
       )
 
-      // Fase 4: "mj" e "∞" se movem juntos para esquerda
       tl.to(
         [mjRef.current, infinityRef.current],
         {
@@ -70,7 +65,6 @@ export function LoadingAnimation() {
         "+=0.3"
       )
 
-      // Fase 5: "lo" entra com bounce
       tl.to(
         loRef.current,
         {
@@ -83,7 +77,6 @@ export function LoadingAnimation() {
         "-=0.4"
       )
 
-      // Fase 6: Tudo volta para o centro
       tl.to(
         [mjRef.current, infinityRef.current, loRef.current],
         {
@@ -94,7 +87,6 @@ export function LoadingAnimation() {
         "+=0.3"
       )
 
-      // Fase 7: Pulse effect
       tl.to(textContainerRef.current, {
         scale: 1.05,
         duration: 0.3,
@@ -103,7 +95,6 @@ export function LoadingAnimation() {
         repeat: 1,
       })
 
-      // Fase 8: Split and fade - cada letra sai em direção diferente
       tl.to(
         mjRef.current,
         {
@@ -137,7 +128,6 @@ export function LoadingAnimation() {
         "-=0.6"
       )
 
-      // Fase 9: Overlay fade out revelando o site
       tl.to(
         overlayRef.current,
         {

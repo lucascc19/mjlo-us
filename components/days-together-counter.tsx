@@ -34,7 +34,6 @@ function AnimatedNumber({ value, label, index }: AnimatedNumberProps) {
   useEffect(() => {
     if (!numberRef.current) return
 
-    // Animate number counting up/down
     gsap.to(
       { val: displayValue },
       {

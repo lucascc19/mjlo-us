@@ -16,7 +16,7 @@ const events = [
     title: "Nosso Primeiro Encontro",
     description:
       "Foi em uma tarde ensolarada que nossos caminhos se cruzaram. Seus olhos brilharam quando você sorriu, e naquele momento eu soube que havia algo especial acontecendo.",
-    image: "/couple-first-date-romantic-restaurant.jpg",
+    images: ["/couple-first-date-romantic-restaurant.jpg", "/lo.jpg"],
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ const events = [
     title: "Nossa Primeira Viagem",
     description:
       "Decidimos fugir da rotina e explorar novos horizontes juntos. Cada lugar visitado se tornou mais especial porque você estava ao meu lado, transformando momentos simples em memórias inesquecíveis.",
-    image: "/couple-travel-adventure-beach-sunset.jpg",
+    images: ["/couple-travel-adventure-beach-sunset.jpg", "/couple-holding-hands-beach.jpg"],
   },
   {
     id: 3,
@@ -32,18 +32,26 @@ const events = [
     title: "O Pedido de Namoro",
     description:
       "Sob um céu estrelado, com o coração batendo acelerado, eu perguntei se você queria oficializar nosso amor. Seu 'sim' foi a resposta mais linda que já ouvi.",
-    image: "/romantic-proposal-night-stars-couple.jpg",
+    images: ["/romantic-proposal-night-stars-couple.jpg"],
   },
 ]
 
 export default function TimelineWithImages() {
   const [mounted, setMounted] = useState(false)
+  const [expandedImages, setExpandedImages] = useState<Map<number, number>>(new Map())
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     setMounted(true)
+    const initialExpanded = new Map<number, number>()
+    events.forEach((event) => {
+      if (event.images.length > 1) {
+        initialExpanded.set(event.id, 0)
+      }
+    })
+    setExpandedImages(initialExpanded)
   }, [])
 
   useEffect(() => {
@@ -80,7 +88,7 @@ export default function TimelineWithImages() {
       }
 
       const cards = sectionRef.current?.querySelectorAll(".timeline-card")
-      cards?.forEach((card, index) => {
+      cards?.forEach((card) => {
         const image = card.querySelector(".timeline-image")
         if (image) {
           gsap.from(image, {
@@ -155,6 +163,21 @@ export default function TimelineWithImages() {
     return () => ctx.revert()
   }, [mounted])
 
+  const handleImageClick = (eventId: number, imageIndex: number) => {
+    setExpandedImages((prev) => {
+      const newMap = new Map(prev)
+      const currentExpanded = newMap.get(eventId)
+
+      if (currentExpanded === imageIndex) {
+        newMap.delete(eventId)
+      } else {
+        newMap.set(eventId, imageIndex)
+      }
+
+      return newMap
+    })
+  }
+
   if (!mounted) return null
 
   return (
@@ -177,7 +200,6 @@ export default function TimelineWithImages() {
           </p>
         </div>
 
-        {/* Timeline events */}
         <div className="relative space-y-24">
           {events.map((event, index) => (
             <div key={event.id} className="relative timeline-card">
@@ -187,17 +209,70 @@ export default function TimelineWithImages() {
                 } gap-8 items-center`}
               >
                 <div className="timeline-image w-full md:w-1/2 relative">
-                  <div className="relative aspect-4/3 rounded-2xl overflow-hidden group">
-                    <Image
-                      src={event.image}
-                      alt={event.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-                  </div>
+                  {event.images.length === 1 ? (
+                    <div className="relative aspect-4/3 rounded-2xl overflow-hidden group shadow-2xl">
+                      <Image
+                        src={event.images[0]}
+                        alt={event.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
+                    </div>
+                  ) : (
+                    <div className="relative space-y-3">
+                      {event.images.map((imageSrc, imageIndex) => {
+                        const isExpanded = expandedImages.get(event.id) === imageIndex
+                        const totalImages = event.images.length
 
-                  {/* Sketch Arrow Connector - Always below image */}
+                        return (
+                          <div
+                            key={imageIndex}
+                            data-image={`${event.id}-${imageIndex}`}
+                            className="relative cursor-pointer rounded-2xl overflow-hidden group shadow-xl transition-all duration-500 ease-out"
+                            style={{
+                              height: isExpanded ? "400px" : "80px",
+                            }}
+                            onClick={() => handleImageClick(event.id, imageIndex)}
+                          >
+                            <Image
+                              src={imageSrc}
+                              alt={`${event.title} - Foto ${imageIndex + 1}`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
+
+                            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <div className="bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold">
+                                    {imageIndex + 1}/{totalImages}
+                                  </div>
+                                  {!isExpanded && (
+                                    <span className="text-sm opacity-80">Clique para expandir</span>
+                                  )}
+                                </div>
+                                <div
+                                  className="text-2xl transition-transform duration-300"
+                                  style={{
+                                    transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                                  }}
+                                >
+                                  ↓
+                                </div>
+                              </div>
+                            </div>
+
+                            {!isExpanded && (
+                              <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
                   {index < events.length - 1 && (
                     <svg
                       className="timeline-arrow absolute left-1/2 -translate-x-1/2 w-12 h-24 mt-12 opacity-30 pointer-events-none hidden md:block"
@@ -205,7 +280,6 @@ export default function TimelineWithImages() {
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      {/* Wavy line */}
                       <path
                         d="M 24 0 Q 18 30 24 60 Q 30 90 24 110 L 24 120"
                         stroke="currentColor"
@@ -213,7 +287,6 @@ export default function TimelineWithImages() {
                         strokeLinecap="round"
                         className="text-muted-foreground"
                       />
-                      {/* Arrow head */}
                       <path
                         d="M 16 112 L 24 120 L 32 112"
                         stroke="currentColor"

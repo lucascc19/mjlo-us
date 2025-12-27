@@ -49,7 +49,7 @@ export default function Home() {
         <DaysTogetherCounter startDate={startDate} yourName="Lucas" partnerName="Maju" />
       </section>
 
-      <ScrollGallery />
+      {/* <ScrollGallery /> */}
       <TimelineWithImages />
     </main>
   )
