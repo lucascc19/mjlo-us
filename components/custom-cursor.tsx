@@ -44,7 +44,7 @@ export function CustomCursor() {
   return (
     <>
       <div
-        className="fixed w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-screen transition-transform duration-200"
+        className="fixed w-8 h-8 rounded-full pointer-events-none z-9999 mix-blend-screen transition-transform duration-200"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -54,7 +54,7 @@ export function CustomCursor() {
         }}
       />
       <div
-        className="fixed w-2 h-2 rounded-full pointer-events-none z-[9999] bg-cyan-400"
+        className="fixed w-2 h-2 rounded-full pointer-events-none z-9999 bg-cyan-400"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
