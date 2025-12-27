@@ -55,7 +55,7 @@ export function PremiumButton({
       </span>
       
       {variant === "primary" && (
-        <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 blur-xl bg-gradient-to-r from-romantic-pink to-romantic-purple transition-opacity duration-500 -z-10" />
+        <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 blur-xl bg-linear-to-r from-romantic-pink to-romantic-purple transition-opacity duration-500 -z-10" />
       )}
     </button>
   )

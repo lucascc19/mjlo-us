@@ -305,7 +305,7 @@ export function PremiumButton({
       </span>
       
       {/* Hover glow */}
-      <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 blur-xl bg-gradient-to-r from-romantic-pink to-romantic-purple transition-opacity duration-500 -z-10" />
+      <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 blur-xl bg-linear-to-r from-romantic-pink to-romantic-purple transition-opacity duration-500 -z-10" />
     </button>
   )
 }
@@ -332,7 +332,7 @@ export function GlassCard({ children, className, hover = true, gradient = false 
       className={cn(
         "glass rounded-3xl p-6",
         hover && "transition-all duration-300 hover:scale-105 hover:shadow-2xl",
-        gradient && "before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-romantic-pink/10 before:to-romantic-purple/10 before:-z-10",
+        gradient && "before:absolute before:inset-0 before:rounded-3xl before:bg-linear-to-br before:from-romantic-pink/10 before:to-romantic-purple/10 before:-z-10",
         "relative",
         className
       )}
@@ -618,7 +618,7 @@ export default function ParallaxGallery() {
             return (
               <div
                 key={image.id}
-                className="relative flex-shrink-0"
+                className="relative shrink-0"
                 style={{
                   width: "70vw",
                   height: "80vh",
@@ -639,7 +639,7 @@ export default function ParallaxGallery() {
                     />
                     
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
                     
                     {/* Content */}
                     <div className="absolute bottom-0 left-0 right-0 p-12 text-white z-10 transform transition-transform duration-300 group-hover:translate-y-0 translate-y-4">
@@ -667,7 +667,7 @@ export default function ParallaxGallery() {
                     
                     {/* Hover Glow */}
                     {isHovered && (
-                      <div className="absolute inset-0 bg-gradient-to-t from-romantic-pink/20 to-romantic-purple/20 pointer-events-none" />
+                      <div className="absolute inset-0 bg-linear-to-t from-romantic-pink/20 to-romantic-purple/20 pointer-events-none" />
                     )}
                   </div>
                 </GlassCard>
