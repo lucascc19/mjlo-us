@@ -58,7 +58,7 @@ export default function PhotoGallery() {
               onClick={() => setSelectedPhoto(photo.id)}
             >
               <Image
-                src={photo.src || "/placeholder.svg"}
+                src={photo.src }
                 alt={photo.alt}
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-500"

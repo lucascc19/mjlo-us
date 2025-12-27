@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Great+Vibes&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Great+Vibes&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -8,50 +8,50 @@
   --romantic-pink: oklch(0.75 0.15 350);
   --romantic-purple: oklch(0.62 0.19 300);
   --romantic-gold: oklch(0.75 0.12 85);
-  --romantic-coral: oklch(0.70 0.15 25);
-  --romantic-rose: oklch(0.65 0.20 15);
-  --romantic-lavender: oklch(0.80 0.10 310);
-  
-  --background: oklch(0.99 0.01 350);
-  --foreground: oklch(0.20 0.02 340);
-  
+  --romantic-coral: oklch(0.7 0.15 25);
+  --romantic-rose: oklch(0.65 0.2 15);
+  --romantic-lavender: oklch(0.8 0.1 310);
+
+  --background: oklch(0.96 0.02 310);
+  --foreground: oklch(0.25 0.03 310);
+
   --primary: var(--romantic-pink);
   --primary-foreground: oklch(0.99 0 0);
-  
+
   --accent: var(--romantic-purple);
   --accent-foreground: oklch(0.99 0 0);
-  
+
   --secondary: var(--romantic-lavender);
-  --secondary-foreground: oklch(0.20 0.02 340);
-  
+  --secondary-foreground: oklch(0.2 0.02 340);
+
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.02 340);
-  
+  --card-foreground: oklch(0.2 0.02 340);
+
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.02 340);
-  
+  --popover-foreground: oklch(0.2 0.02 340);
+
   --muted: oklch(0.96 0.01 350);
   --muted-foreground: oklch(0.55 0.02 340);
-  
+
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0 0);
-  
+
   --border: oklch(0.92 0.02 350);
   --input: oklch(0.92 0.02 350);
   --ring: var(--romantic-pink);
-  
+
   --chart-1: var(--romantic-pink);
   --chart-2: var(--romantic-purple);
   --chart-3: var(--romantic-gold);
   --chart-4: var(--romantic-coral);
   --chart-5: var(--romantic-lavender);
-  
+
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  
+
   --radius: 1.5rem;
-  
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: var(--romantic-purple);
@@ -65,36 +65,36 @@
 .dark {
   --background: oklch(0.12 0.02 340);
   --foreground: oklch(0.98 0.01 350);
-  
+
   --card: oklch(0.18 0.02 340);
   --card-foreground: oklch(0.98 0.01 350);
-  
+
   --popover: oklch(0.18 0.02 340);
   --popover-foreground: oklch(0.98 0.01 350);
-  
+
   --primary: var(--romantic-pink);
   --primary-foreground: oklch(0.12 0.02 340);
-  
+
   --secondary: oklch(0.25 0.05 340);
   --secondary-foreground: oklch(0.98 0.01 350);
-  
+
   --muted: oklch(0.25 0.05 340);
   --muted-foreground: oklch(0.65 0.02 350);
-  
+
   --accent: var(--romantic-purple);
   --accent-foreground: oklch(0.98 0.01 350);
-  
+
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.99 0 0);
-  
+
   --border: oklch(0.25 0.05 340);
   --input: oklch(0.25 0.05 340);
   --ring: var(--romantic-pink);
-  
+
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  
+
   --sidebar: oklch(0.15 0.02 340);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: var(--romantic-purple);
@@ -106,10 +106,10 @@
 }
 
 @theme inline {
-  --font-heading: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
-  --font-cursive: 'Great Vibes', cursive;
-  
+  --font-heading: "JetBrains Mono", monospace;
+  --font-sans: "JetBrains Mono", monospace;
+  --font-cursive: "Great Vibes", cursive;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -134,19 +134,19 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  
+
   --color-romantic-pink: var(--romantic-pink);
   --color-romantic-purple: var(--romantic-purple);
   --color-romantic-gold: var(--romantic-gold);
   --color-romantic-coral: var(--romantic-coral);
   --color-romantic-rose: var(--romantic-rose);
   --color-romantic-lavender: var(--romantic-lavender);
-  
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -165,7 +165,12 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
   }
 }
@@ -181,7 +186,8 @@
 }
 
 @keyframes float-smooth {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
   33% {
@@ -226,7 +232,8 @@
 }
 
 @keyframes glow-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
   }
   50% {
@@ -283,16 +290,22 @@
 }
 
 @keyframes heart-beat {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
-  10%, 30% {
+  10%,
+  30% {
     transform: scale(0.9);
   }
-  20%, 40%, 60%, 80% {
+  20%,
+  40%,
+  60%,
+  80% {
     transform: scale(1.1);
   }
-  50%, 70% {
+  50%,
+  70% {
     transform: scale(1.05);
   }
 }
@@ -335,12 +348,7 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
 }
@@ -355,7 +363,12 @@
 }
 
 .gradient-sunset {
-  background: linear-gradient(135deg, var(--romantic-gold) 0%, var(--romantic-coral) 50%, var(--romantic-purple) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--romantic-gold) 0%,
+    var(--romantic-coral) 50%,
+    var(--romantic-purple) 100%
+  );
 }
 
 .gradient-soft {
@@ -404,4 +417,91 @@
 /* Text Shadows */
 .text-glow {
   text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+}
+.hover-glow {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+}
+
+.hover-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0, 102, 255, 0.3), rgba(56, 189, 248, 0.3));
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.hover-glow:hover::before {
+  opacity: 1;
+}
+
+.hover-glow:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 102, 255, 0.2);
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+.animate-wave {
+  animation: wave 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+@keyframes float-diagonal {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(250px, -150px) scale(1.1);
+  }
+  50% {
+    transform: translate(400px, 100px) scale(0.9);
+  }
+  75% {
+    transform: translate(150px, 250px) scale(1.05);
+  }
+}
+
+@keyframes float-diagonal-reverse {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-280px, 120px) scale(1.1);
+  }
+  50% {
+    transform: translate(-450px, -80px) scale(0.9);
+  }
+  75% {
+    transform: translate(-120px, -200px) scale(1.05);
+  }
 }

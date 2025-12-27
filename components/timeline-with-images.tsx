@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { FloatingDoodles } from "./ui/floating-doodles"
+import { DotWaveLoader } from "./dot-wave-loader"
 
-const timelineEvents = [
+const events = [
   {
     id: 1,
     date: "Janeiro 2023",
@@ -65,10 +67,11 @@ export default function TimelineWithImages() {
   }, [])
 
   return (
-    <section id="timeline" ref={sectionRef} className="py-20 px-4 bg-background">
+    <section id="timeline" ref={sectionRef} className="py-20 px-4 relative">
+      <FloatingDoodles />
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 
+          <h2
             className="text-5xl md:text-7xl font-bold text-balance mb-4"
             style={{ fontFamily: "var(--font-heading)" }}
           >
@@ -79,48 +82,16 @@ export default function TimelineWithImages() {
           </p>
         </div>
 
-        {/* Side by side images with scroll indicator */}
-        <div className="grid md:grid-cols-2 gap-4 mb-8">
-          {timelineEvents.slice(0, 2).map((event) => (
-            <div key={event.id} className="relative aspect-3/4 rounded-2xl overflow-hidden group">
-              <Image
-                src={event.image || "/placeholder.svg"}
-                alt={event.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="inline-block px-3 py-1.5 rounded-full bg-white/90 text-black text-sm font-medium mb-3">
-                  {event.date}
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white text-balance">{event.title}</h3>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="flex items-center justify-center gap-4 py-4">
-          <span className="text-sm text-muted-foreground">Role para explorar</span>
-          <div className="w-48 h-1.5 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all duration-300"
-              style={{ width: `${scrollProgress * 100}%` }}
-            />
-          </div>
-        </div>
-
         {/* Remaining timeline events */}
-        <div className="mt-20 space-y-16">
-          {timelineEvents.slice(2).map((event, index) => (
+        <div className="relative">
+          {events.slice(0, 3).map((event, index) => (
             <div
               key={event.id}
               className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-8 items-center`}
             >
               <div className="w-full md:w-1/2 relative aspect-4/3 rounded-2xl overflow-hidden group">
                 <Image
-                  src={event.image || "/placeholder.svg"}
+                  src={event.image}
                   alt={event.title}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -132,10 +103,19 @@ export default function TimelineWithImages() {
                   {event.date}
                 </div>
                 <h3 className="text-3xl md:text-4xl font-bold text-balance">{event.title}</h3>
-                <p className="text-muted-foreground text-lg leading-relaxed text-pretty">{event.description}</p>
+                <p className="text-muted-foreground text-lg leading-relaxed text-pretty">
+                  {event.description}
+                </p>
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-32 text-center space-y-6">
+          <DotWaveLoader />
+          <p className="text-sm uppercase tracking-widest text-muted-foreground/60">
+            Mais momentos virão
+          </p>
         </div>
       </div>
     </section>

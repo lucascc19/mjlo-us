@@ -632,7 +632,7 @@ export default function ParallaxGallery() {
                 <GlassCard className="h-full overflow-hidden group cursor-pointer">
                   <div className="relative h-full">
                     <Image 
-                      src={image.src || "/placeholder.svg"} 
+                      src={image.src} 
                       alt={image.alt} 
                       fill 
                       className="object-cover transition-transform duration-500 group-hover:scale-110" 
