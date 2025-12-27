@@ -3,17 +3,11 @@
 import { useEffect, useState, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTimeElapsed } from "@/hooks/use-time-elapsed"
+import { GSAP_ANIMATIONS, GSAP_DURATION, GSAP_EASE, SCROLL_TRIGGER_PRESETS } from "@/lib/gsap-config"
+import { COUNTER_CONFIG, SCROLL_CONFIG } from "@/lib/constants"
 
 gsap.registerPlugin(ScrollTrigger)
-
-interface TimeElapsed {
-  years: number
-  months: number
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
-}
 
 interface DaysTogetherCounterProps {
   startDate: Date
@@ -38,8 +32,8 @@ function AnimatedNumber({ value, label, index }: AnimatedNumberProps) {
       { val: displayValue },
       {
         val: value,
-        duration: 0.8,
-        ease: "power2.out",
+        duration: COUNTER_CONFIG.ANIMATION_DURATION / 1000,
+        ease: GSAP_EASE.SMOOTH,
         onUpdate: function () {
           setDisplayValue(Math.round(this.targets()[0].val))
         },
@@ -67,44 +61,19 @@ export function DaysTogetherCounter({
   yourName = "Nós",
   partnerName,
 }: DaysTogetherCounterProps) {
-  const [timeElapsed, setTimeElapsed] = useState<TimeElapsed>({
-    years: 0,
-    months: 0,
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
   const [mounted, setMounted] = useState(false)
   const [isInView, setIsInView] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
   const borderRef = useRef<SVGSVGElement>(null)
+  
+  // Usa hook customizado - só calcula quando está visível para otimizar performance
+  const timeElapsed = useTimeElapsed(startDate, isInView)
 
   useEffect(() => {
     setMounted(true)
-
-    const calculateTime = () => {
-      const now = new Date()
-      const diff = now.getTime() - startDate.getTime()
-
-      const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24))
-      const years = Math.floor(totalDays / 365)
-      const months = Math.floor((totalDays % 365) / 30)
-      const days = Math.floor((totalDays % 365) % 30)
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-      setTimeElapsed({ years, months, days, hours, minutes, seconds })
-    }
-
-    calculateTime()
-    const interval = setInterval(calculateTime, 1000)
-
-    return () => clearInterval(interval)
-  }, [startDate])
+  }, [])
 
   useEffect(() => {
     if (!mounted || !containerRef.current) return
@@ -114,14 +83,12 @@ export function DaysTogetherCounter({
         gsap.from(titleRef.current, {
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
+            ...SCROLL_TRIGGER_PRESETS.fadeInUp,
             onEnter: () => setIsInView(true),
           },
+          ...GSAP_ANIMATIONS.fadeInUp(0),
           y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: GSAP_DURATION.MEDIUM,
         })
       }
 
@@ -129,12 +96,11 @@ export function DaysTogetherCounter({
         gsap.from(borderRef.current, {
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
+            ...SCROLL_TRIGGER_PRESETS.fadeInUp,
           },
           scale: 0.95,
           opacity: 0,
-          duration: 1,
+          duration: GSAP_DURATION.SLOW,
           ease: "back.out(1.2)",
           delay: 0.2,
         })
@@ -144,13 +110,12 @@ export function DaysTogetherCounter({
         gsap.from(subtitleRef.current, {
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
+            ...SCROLL_TRIGGER_PRESETS.fadeInUp,
           },
           y: 20,
           opacity: 0,
           duration: 0.6,
-          ease: "power2.out",
+          ease: GSAP_EASE.SMOOTH,
           delay: 0.4,
         })
       }
@@ -163,12 +128,9 @@ export function DaysTogetherCounter({
             start: "top 70%",
             toggleActions: "play none none none",
           },
-          x: -50,
-          opacity: 0,
-          duration: 0.8,
+          ...GSAP_ANIMATIONS.slideInLeft(50, 0.6),
           stagger: 0.1,
           ease: "back.out(1.4)",
-          delay: 0.6,
         })
       }
     }, containerRef)

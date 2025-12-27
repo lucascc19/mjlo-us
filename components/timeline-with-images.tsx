@@ -9,6 +9,7 @@ import { DotWaveLoader } from "./dot-wave-loader"
 import type { MediaItemProps } from "@/types/timeline"
 import { MEDIA_HEIGHTS, SCROLL_CONFIG } from "@/lib/constants"
 import { timelineEvents } from "@/data/timeline-events"
+import { GSAP_ANIMATIONS, GSAP_DURATION, GSAP_EASE, GSAP_STAGGER } from "@/lib/gsap-config"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -136,10 +137,8 @@ export default function TimelineWithImages() {
             start: SCROLL_CONFIG.TRIGGER_START_TIMELINE,
             toggleActions: "play none none none",
           },
-          y: 40,
-          opacity: 0,
-          duration: 1,
-          ease: "power2.out",
+          ...GSAP_ANIMATIONS.fadeInUp(),
+          duration: GSAP_DURATION.SLOW,
         })
       }
 
@@ -150,11 +149,9 @@ export default function TimelineWithImages() {
             start: SCROLL_CONFIG.TRIGGER_START_TIMELINE,
             toggleActions: "play none none none",
           },
+          ...GSAP_ANIMATIONS.fadeInUp(0.2),
           y: 30,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0.2,
-          ease: "power2.out",
+          duration: GSAP_DURATION.MEDIUM,
         })
       }
 
@@ -170,8 +167,8 @@ export default function TimelineWithImages() {
             },
             y: 60,
             opacity: 0,
-            duration: 1,
-            ease: "power3.out",
+            duration: GSAP_DURATION.SLOW,
+            ease: GSAP_EASE.POWER3_OUT,
           })
         }
 
@@ -183,11 +180,8 @@ export default function TimelineWithImages() {
               start: SCROLL_CONFIG.TRIGGER_START_CARDS,
               toggleActions: "play none none none",
             },
-            y: 40,
-            opacity: 0,
-            duration: 0.8,
-            delay: 0.2,
-            ease: "power2.out",
+            ...GSAP_ANIMATIONS.fadeInUp(0.2),
+            duration: GSAP_DURATION.MEDIUM,
           })
         }
 
@@ -199,11 +193,8 @@ export default function TimelineWithImages() {
               start: SCROLL_CONFIG.TRIGGER_START_CARDS,
               toggleActions: "play none none none",
             },
-            scale: 0,
-            opacity: 0,
-            duration: 0.5,
-            delay: 0.4,
-            ease: "back.out(1.7)",
+            ...GSAP_ANIMATIONS.scaleIn(0.4),
+            duration: GSAP_DURATION.NORMAL,
           })
         }
 
@@ -223,8 +214,8 @@ export default function TimelineWithImages() {
                 toggleActions: "play none none none",
               },
               strokeDashoffset: 0,
-              duration: 1,
-              ease: "power2.inOut",
+              duration: GSAP_DURATION.SLOW,
+              ease: GSAP_EASE.SMOOTH_IN_OUT,
             })
           }
         }
