@@ -107,12 +107,10 @@ export function DaysTogetherCounter({
     return () => clearInterval(interval)
   }, [startDate])
 
-  // GSAP Scroll Animation
   useEffect(() => {
     if (!mounted || !containerRef.current) return
 
     const ctx = gsap.context(() => {
-      // Animate title
       if (titleRef.current) {
         gsap.from(titleRef.current, {
           scrollTrigger: {
@@ -128,7 +126,6 @@ export function DaysTogetherCounter({
         })
       }
 
-      // Animate border
       if (borderRef.current) {
         gsap.from(borderRef.current, {
           scrollTrigger: {
@@ -144,7 +141,6 @@ export function DaysTogetherCounter({
         })
       }
 
-      // Animate subtitle
       if (subtitleRef.current) {
         gsap.from(subtitleRef.current, {
           scrollTrigger: {
@@ -160,7 +156,6 @@ export function DaysTogetherCounter({
         })
       }
 
-      // Animate counter cards with stagger
       const cards = containerRef.current?.querySelectorAll(".counter-card")
       if (cards && cards.length > 0) {
         gsap.from(cards, {

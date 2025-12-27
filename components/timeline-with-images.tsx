@@ -50,7 +50,6 @@ export default function TimelineWithImages() {
     if (!mounted || !sectionRef.current) return
 
     const ctx = gsap.context(() => {
-      // Animate title
       if (titleRef.current) {
         gsap.from(titleRef.current, {
           scrollTrigger: {
@@ -65,7 +64,6 @@ export default function TimelineWithImages() {
         })
       }
 
-      // Animate subtitle
       if (subtitleRef.current) {
         gsap.from(subtitleRef.current, {
           scrollTrigger: {
@@ -81,10 +79,8 @@ export default function TimelineWithImages() {
         })
       }
 
-      // Animate timeline cards with progressive fade up
       const cards = sectionRef.current?.querySelectorAll(".timeline-card")
       cards?.forEach((card, index) => {
-        // Animate image first
         const image = card.querySelector(".timeline-image")
         if (image) {
           gsap.from(image, {
@@ -100,7 +96,6 @@ export default function TimelineWithImages() {
           })
         }
 
-        // Animate content after image
         const content = card.querySelector(".timeline-content")
         if (content) {
           gsap.from(content, {
@@ -117,7 +112,6 @@ export default function TimelineWithImages() {
           })
         }
 
-        // Animate date badge
         const badge = card.querySelector(".timeline-badge")
         if (badge) {
           gsap.from(badge, {
@@ -134,7 +128,6 @@ export default function TimelineWithImages() {
           })
         }
 
-        // Animate arrow
         const arrow = card.querySelector(".timeline-arrow")
         if (arrow) {
           const path = arrow.querySelector("path")
