@@ -57,7 +57,7 @@ function AnimatedNumber({ value, label, index }: AnimatedNumberProps) {
           {displayValue}
         </div>
       </div>
-      <div className="text-xs text-muted-foreground/50 uppercase tracking-wider">{label}</div>
+      <div className="text-xs text-muted-foreground uppercase tracking-wider">{label}</div>
     </div>
   )
 }
@@ -214,7 +214,7 @@ export function DaysTogetherCounter({
 
         <p
           ref={subtitleRef}
-          className="text-sm text-muted-foreground/50 mb-8 uppercase tracking-wider"
+          className="text-sm text-muted-foreground mb-8 uppercase tracking-wider"
         >
           Estamos juntos há
         </p>

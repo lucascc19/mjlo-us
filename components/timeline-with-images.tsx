@@ -9,30 +9,153 @@ import { DotWaveLoader } from "./dot-wave-loader"
 
 gsap.registerPlugin(ScrollTrigger)
 
+interface MediaItem {
+  src: string
+  type: "image" | "video"
+  alt?: string
+}
+
+interface MediaItemProps {
+  mediaItem: MediaItem
+  mediaIndex: number
+  eventId: number
+  eventTitle: string
+  isExpanded: boolean
+  totalMedia: number
+  onImageClick: (eventId: number, mediaIndex: number) => void
+}
+
+function MediaItemComponent({
+  mediaItem,
+  mediaIndex,
+  eventId,
+  eventTitle,
+  isExpanded,
+  totalMedia,
+  onImageClick,
+}: MediaItemProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (mediaItem.type === "video" && videoRef.current) {
+      if (isExpanded) {
+        videoRef.current.play().catch(() => {})
+      } else {
+        videoRef.current.pause()
+        videoRef.current.currentTime = 0
+      }
+    }
+  }, [isExpanded, mediaItem.type])
+
+  return (
+    <div
+      key={mediaIndex}
+      data-image={`${eventId}-${mediaIndex}`}
+      className="relative cursor-pointer rounded-2xl overflow-hidden group shadow-xl transition-all duration-500 ease-out mx-auto"
+      style={{
+        height: isExpanded ? (mediaItem.type === "video" ? "auto" : "533px") : "80px",
+        aspectRatio: isExpanded && mediaItem.type === "image" ? "3/4" : undefined,
+        maxWidth: "400px",
+        width: "100%",
+      }}
+      onClick={() => onImageClick(eventId, mediaIndex)}
+    >
+      {mediaItem.type === "image" ? (
+        <Image
+          src={mediaItem.src}
+          alt={`${eventTitle} - Foto ${mediaIndex + 1}`}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={mediaItem.src}
+          className={`w-full transition-transform duration-500 group-hover:scale-105 ${
+            isExpanded ? "h-auto" : "h-full object-cover"
+          }`}
+          controls={isExpanded}
+          autoPlay={isExpanded}
+          loop
+          muted
+          playsInline
+        />
+      )}
+      <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent pointer-events-none" />
+
+      <div className="absolute bottom-0 left-0 right-0 p-4 text-white pointer-events-none">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2">
+              {mediaItem.type === "video" && (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+              {mediaIndex + 1}/{totalMedia}
+            </div>
+            {!isExpanded && <span className="text-sm opacity-80">Clique para expandir</span>}
+          </div>
+          <div
+            className="text-2xl transition-transform duration-300"
+            style={{
+              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          >
+            ↓
+          </div>
+        </div>
+      </div>
+
+      {!isExpanded && (
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] pointer-events-none" />
+      )}
+    </div>
+  )
+}
+
 const events = [
   {
     id: 1,
-    date: "Janeiro 2023",
-    title: "Nosso Primeiro Encontro",
+    date: "Dezembro 2024",
+    title: "Nosso Primeiro Encontro em Fortaleza-CE",
     description:
-      "Foi em uma tarde ensolarada que nossos caminhos se cruzaram. Seus olhos brilharam quando você sorriu, e naquele momento eu soube que havia algo especial acontecendo.",
-    images: ["/couple-first-date-romantic-restaurant.jpg", "/lo.jpg"],
+      "Lembro que nesse dia eu tava bem ansioso pois tava com muita saudade e era a primeira vez que a gente se encontrava fora de Russas. Lembro também que passei um tempão falando que tava a fim de comer taco, e aí quando finalmente fomos comer o bendito taco, ele não superou minhas espectativas. Mas tirando isso, foi uma noite que eu me diverti bastante e fui pra casa com um sorriso no rosto.",
+    media: [
+      { src: "/imprensa.jpeg", type: "image" as const },
+      { src: "/imprensa-2.jpeg", type: "image" as const },
+      { src: "/imprensa-3.mp4", type: "video" as const },
+    ],
   },
   {
     id: 2,
-    date: "Março 2023",
-    title: "Nossa Primeira Viagem",
+    date: "Janeiro 2025",
+    title: "Inaugurando a Trevo",
     description:
-      "Decidimos fugir da rotina e explorar novos horizontes juntos. Cada lugar visitado se tornou mais especial porque você estava ao meu lado, transformando momentos simples em memórias inesquecíveis.",
-    images: ["/couple-travel-adventure-beach-sunset.jpg", "/couple-holding-hands-beach.jpg"],
+      "Aprendi a gostar de açaí com você! Tudo começou quando a gente foi na Lori comprar o açaí mais pedrado de todos os tempos. Mas quando a Trevo inaugurou... pude ter certeza que o açaí da Lori não é tão bom. Nesse dia a gente tinha saído da faculdade em busca de um docinho e achamos ouro. Lembro que no dia seguinte a gente foi de novo.",
+    media: [{ src: "/trevo.jpeg", type: "image" as const }],
   },
   {
     id: 3,
-    date: "Maio 2023",
-    title: "O Pedido de Namoro",
+    date: "Maio 2025",
+    title: "Investimos na nossa visão",
     description:
-      "Sob um céu estrelado, com o coração batendo acelerado, eu perguntei se você queria oficializar nosso amor. Seu 'sim' foi a resposta mais linda que já ouvi.",
-    images: ["/romantic-proposal-night-stars-couple.jpg"],
+      "Muito difícil ser da TI e não usar um óculos. Você falava a todo momento que eu necessitava de um óculos. Demorei a aceitar que precisava, mas teve o exato dia que falei: 'Vamos no centro olhar uns óculos.', e acabamos comprando. E você ficou muito linda com esse modelo.",
+    media: [
+      { src: "/oculos-john.jpeg", type: "image" as const },
+      { src: "/oculos-john-1.jpeg", type: "image" as const },
+    ],
+  },
+   {
+    id: 4,
+    date: "Maio 2025",
+    title: "Investimos na nossa visão",
+    description:
+      "Muito difícil ser da TI e não usar um óculos. Você falava a todo momento que eu necessitava de um óculos. Demorei a aceitar que precisava, mas teve o exato dia que falei: 'Vamos no centro olhar uns óculos.', e acabamos comprando. E você ficou muito linda com esse modelo.",
+    media: [
+      { src: "/oculos-john.jpeg", type: "image" as const },
+      { src: "/oculos-john-1.jpeg", type: "image" as const },
+    ],
   },
 ]
 
@@ -47,7 +170,7 @@ export default function TimelineWithImages() {
     setMounted(true)
     const initialExpanded = new Map<number, number>()
     events.forEach((event) => {
-      if (event.images.length > 1) {
+      if (event.media.length > 1) {
         initialExpanded.set(event.id, 0)
       }
     })
@@ -209,67 +332,41 @@ export default function TimelineWithImages() {
                 } gap-8 items-center`}
               >
                 <div className="timeline-image w-full md:w-1/2 relative">
-                  {event.images.length === 1 ? (
-                    <div className="relative aspect-4/3 rounded-2xl overflow-hidden group shadow-2xl">
-                      <Image
-                        src={event.images[0]}
-                        alt={event.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
+                  {event.media.length === 1 ? (
+                    <div className="relative aspect-3/4 h-[500px] rounded-2xl overflow-hidden group shadow-2xl mx-auto max-w-[400px]">
+                      {event.media[0].type === "image" ? (
+                        <Image
+                          src={event.media[0].src}
+                          alt={event.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <video
+                          src={event.media[0].src}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          controls
+                          loop
+                          muted
+                          playsInline
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent pointer-events-none" />
                     </div>
                   ) : (
                     <div className="relative space-y-3">
-                      {event.images.map((imageSrc, imageIndex) => {
-                        const isExpanded = expandedImages.get(event.id) === imageIndex
-                        const totalImages = event.images.length
-
-                        return (
-                          <div
-                            key={imageIndex}
-                            data-image={`${event.id}-${imageIndex}`}
-                            className="relative cursor-pointer rounded-2xl overflow-hidden group shadow-xl transition-all duration-500 ease-out"
-                            style={{
-                              height: isExpanded ? "400px" : "80px",
-                            }}
-                            onClick={() => handleImageClick(event.id, imageIndex)}
-                          >
-                            <Image
-                              src={imageSrc}
-                              alt={`${event.title} - Foto ${imageIndex + 1}`}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
-
-                            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <div className="bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold">
-                                    {imageIndex + 1}/{totalImages}
-                                  </div>
-                                  {!isExpanded && (
-                                    <span className="text-sm opacity-80">Clique para expandir</span>
-                                  )}
-                                </div>
-                                <div
-                                  className="text-2xl transition-transform duration-300"
-                                  style={{
-                                    transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                                  }}
-                                >
-                                  ↓
-                                </div>
-                              </div>
-                            </div>
-
-                            {!isExpanded && (
-                              <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
-                            )}
-                          </div>
-                        )
-                      })}
+                      {event.media.map((mediaItem, mediaIndex) => (
+                        <MediaItemComponent
+                          key={mediaIndex}
+                          mediaItem={mediaItem}
+                          mediaIndex={mediaIndex}
+                          eventId={event.id}
+                          eventTitle={event.title}
+                          isExpanded={expandedImages.get(event.id) === mediaIndex}
+                          totalMedia={event.media.length}
+                          onImageClick={handleImageClick}
+                        />
+                      ))}
                     </div>
                   )}
 
