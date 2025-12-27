@@ -150,7 +150,6 @@ export function LoadingAnimation() {
         ref={overlayRef}
         className="fixed inset-0 z-9999 flex items-center justify-center bg-background"
       >
-        {/* Vinheta com cor primária */}
         <div
           className="absolute inset-0"
           style={{
@@ -158,7 +157,6 @@ export function LoadingAnimation() {
           }}
         />
 
-        {/* Granulado intenso estilo Mars */}
         <svg className="absolute inset-0 w-full h-full opacity-[0.15]">
           <defs>
             <filter id="loading-grain-intense">
@@ -174,7 +172,6 @@ export function LoadingAnimation() {
           <rect width="100%" height="100%" filter="url(#loading-grain-intense)" />
         </svg>
 
-        {/* Card glassmorphism */}
         <div ref={textContainerRef} className="relative flex items-center justify-center gap-4">
           <span
             ref={mjRef}

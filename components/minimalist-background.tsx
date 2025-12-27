@@ -35,7 +35,6 @@ export function MinimalistBackground() {
         />
       )}
 
-      {/* Granulado intenso estilo Mars */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.15]">
         <defs>
           <filter id="grain-intense">
@@ -51,7 +50,6 @@ export function MinimalistBackground() {
         <rect width="100%" height="100%" filter="url(#grain-intense)" />
       </svg>
 
-      {/* Elemento flutuante com gradiente - sombra do outro lado */}
       <div
         className="absolute w-[800px] h-[800px] rounded-full blur-[150px] opacity-30 pointer-events-none"
         style={{
@@ -64,7 +62,6 @@ export function MinimalistBackground() {
         }}
       />
 
-      {/* Segundo elemento flutuante */}
       <div
         className="absolute w-[700px] h-[700px] rounded-full blur-[130px] opacity-25 pointer-events-none"
         style={{

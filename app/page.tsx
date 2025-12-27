@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Hero from "@/components/hero"
-import ScrollGallery from "@/components/scroll-gallery"
 import TimelineWithImages from "@/components/timeline-with-images"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { DaysTogetherCounter } from "@/components/days-together-counter"
-import { PolaroidGallery } from "@/components/polaroid-gallery"
 import { HeartsRain } from "@/components/hearts-rain"
 import { LoadingAnimation } from "@/components/loading-animation"
 import { MinimalistBackground } from "@/components/minimalist-background"
@@ -49,7 +47,6 @@ export default function Home() {
         <DaysTogetherCounter startDate={startDate} yourName="Lucas" partnerName="Maju" />
       </section>
 
-      {/* <ScrollGallery /> */}
       <TimelineWithImages />
     </main>
   )
