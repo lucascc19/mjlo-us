@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { FloatingDoodles } from "./ui/floating-doodles"
 import { DotWaveLoader } from "./dot-wave-loader"
+
+gsap.registerPlugin(ScrollTrigger)
 
 const events = [
   {
@@ -30,41 +34,135 @@ const events = [
       "Sob um céu estrelado, com o coração batendo acelerado, eu perguntei se você queria oficializar nosso amor. Seu 'sim' foi a resposta mais linda que já ouvi.",
     image: "/romantic-proposal-night-stars-couple.jpg",
   },
-  {
-    id: 4,
-    date: "Agosto 2023",
-    title: "Nosso Aniversário de Namoro",
-    description:
-      "Celebramos meses incríveis juntos, cheios de risadas, aventuras e muito amor. Cada dia ao seu lado é um presente que eu valorizo profundamente.",
-    image: "/couple-celebrating-anniversary-dinner-candles.jpg",
-  },
-  {
-    id: 5,
-    date: "Dezembro 2024",
-    title: "Nossas Aventuras Continuam",
-    description:
-      "Nossa história está apenas começando. Com você, descobri que o amor verdadeiro existe e que cada dia pode ser uma nova página cheia de momentos especiais.",
-    image: "/couple-happy-together-winter-cozy.jpg",
-  },
 ]
 
 export default function TimelineWithImages() {
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return
-      const section = sectionRef.current
-      const rect = section.getBoundingClientRect()
-      const progress = Math.max(0, Math.min(1, 1 - rect.top / window.innerHeight))
-      setScrollProgress(progress)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
+    setMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (!mounted || !sectionRef.current) return
+
+    const ctx = gsap.context(() => {
+      // Animate title
+      if (titleRef.current) {
+        gsap.from(titleRef.current, {
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          y: 40,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        })
+      }
+
+      // Animate subtitle
+      if (subtitleRef.current) {
+        gsap.from(subtitleRef.current, {
+          scrollTrigger: {
+            trigger: subtitleRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          delay: 0.2,
+          ease: "power2.out",
+        })
+      }
+
+      // Animate timeline cards with progressive fade up
+      const cards = sectionRef.current?.querySelectorAll(".timeline-card")
+      cards?.forEach((card, index) => {
+        // Animate image first
+        const image = card.querySelector(".timeline-image")
+        if (image) {
+          gsap.from(image, {
+            scrollTrigger: {
+              trigger: card,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+            y: 60,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+          })
+        }
+
+        // Animate content after image
+        const content = card.querySelector(".timeline-content")
+        if (content) {
+          gsap.from(content, {
+            scrollTrigger: {
+              trigger: card,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            delay: 0.2,
+            ease: "power2.out",
+          })
+        }
+
+        // Animate date badge
+        const badge = card.querySelector(".timeline-badge")
+        if (badge) {
+          gsap.from(badge, {
+            scrollTrigger: {
+              trigger: card,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            delay: 0.4,
+            ease: "back.out(1.7)",
+          })
+        }
+
+        // Animate arrow
+        const arrow = card.querySelector(".timeline-arrow")
+        if (arrow) {
+          const path = arrow.querySelector("path")
+          if (path) {
+            const length = (path as SVGPathElement).getTotalLength()
+            gsap.set(path, {
+              strokeDasharray: length,
+              strokeDashoffset: length,
+            })
+            gsap.to(path, {
+              scrollTrigger: {
+                trigger: card,
+                start: "bottom 60%",
+                toggleActions: "play none none none",
+              },
+              strokeDashoffset: 0,
+              duration: 1,
+              ease: "power2.inOut",
+            })
+          }
+        }
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [mounted])
+
+  if (!mounted) return null
 
   return (
     <section id="timeline" ref={sectionRef} className="py-20 px-4 relative">
@@ -72,40 +170,78 @@ export default function TimelineWithImages() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2
+            ref={titleRef}
             className="text-5xl md:text-7xl font-bold text-balance mb-4"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Nossos Momentos
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl text-pretty max-w-2xl mx-auto">
+          <p
+            ref={subtitleRef}
+            className="text-muted-foreground text-lg md:text-xl text-pretty max-w-2xl mx-auto"
+          >
             Uma jornada visual através dos nossos momentos mais especiais
           </p>
         </div>
 
-        {/* Remaining timeline events */}
-        <div className="relative">
-          {events.slice(0, 3).map((event, index) => (
-            <div
-              key={event.id}
-              className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-8 items-center`}
-            >
-              <div className="w-full md:w-1/2 relative aspect-4/3 rounded-2xl overflow-hidden group">
-                <Image
-                  src={event.image}
-                  alt={event.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-              </div>
-              <div className="w-full md:w-1/2 space-y-4">
-                <div className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                  {event.date}
+        {/* Timeline events */}
+        <div className="relative space-y-24">
+          {events.map((event, index) => (
+            <div key={event.id} className="relative timeline-card">
+              <div
+                className={`flex flex-col ${
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                } gap-8 items-center`}
+              >
+                <div className="timeline-image w-full md:w-1/2 relative">
+                  <div className="relative aspect-4/3 rounded-2xl overflow-hidden group">
+                    <Image
+                      src={event.image}
+                      alt={event.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
+                  </div>
+
+                  {/* Sketch Arrow Connector - Always below image */}
+                  {index < events.length - 1 && (
+                    <svg
+                      className="timeline-arrow absolute left-1/2 -translate-x-1/2 w-12 h-24 mt-12 opacity-30 pointer-events-none hidden md:block"
+                      viewBox="0 0 48 128"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {/* Wavy line */}
+                      <path
+                        d="M 24 0 Q 18 30 24 60 Q 30 90 24 110 L 24 120"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        className="text-muted-foreground"
+                      />
+                      {/* Arrow head */}
+                      <path
+                        d="M 16 112 L 24 120 L 32 112"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        fill="none"
+                        className="text-muted-foreground"
+                      />
+                    </svg>
+                  )}
                 </div>
-                <h3 className="text-3xl md:text-4xl font-bold text-balance">{event.title}</h3>
-                <p className="text-muted-foreground text-lg leading-relaxed text-pretty">
-                  {event.description}
-                </p>
+                <div className="timeline-content w-full md:w-1/2 space-y-4">
+                  <div className="timeline-badge inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+                    {event.date}
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold text-balance">{event.title}</h3>
+                  <p className="text-muted-foreground text-lg leading-relaxed text-pretty">
+                    {event.description}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

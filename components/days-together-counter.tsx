@@ -1,7 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState, useRef } from "react"
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface TimeElapsed {
   years: number
@@ -21,27 +24,39 @@ interface DaysTogetherCounterProps {
 interface AnimatedNumberProps {
   value: number
   label: string
+  index: number
 }
 
-function AnimatedNumber({ value, label }: AnimatedNumberProps) {
+function AnimatedNumber({ value, label, index }: AnimatedNumberProps) {
+  const numberRef = useRef<HTMLDivElement>(null)
+  const [displayValue, setDisplayValue] = useState(0)
+
+  useEffect(() => {
+    if (!numberRef.current) return
+
+    // Animate number counting up/down
+    gsap.to(
+      { val: displayValue },
+      {
+        val: value,
+        duration: 0.8,
+        ease: "power2.out",
+        onUpdate: function () {
+          setDisplayValue(Math.round(this.targets()[0].val))
+        },
+      }
+    )
+  }, [value, displayValue])
+
   return (
-    <div className="space-y-2 overflow-hidden">
+    <div className="space-y-2 overflow-hidden counter-card" data-index={index}>
       <div className="relative h-12 md:h-16">
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={value}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{
-              duration: 0.3,
-              ease: [0.4, 0, 0.2, 1],
-            }}
-            className="absolute inset-0 flex items-center justify-center text-4xl md:text-5xl font-bold text-foreground/90 tabular-nums"
-          >
-            {value}
-          </motion.div>
-        </AnimatePresence>
+        <div
+          ref={numberRef}
+          className="absolute inset-0 flex items-center justify-center text-4xl md:text-5xl font-bold text-foreground/90 tabular-nums"
+        >
+          {displayValue}
+        </div>
       </div>
       <div className="text-xs text-muted-foreground/50 uppercase tracking-wider">{label}</div>
     </div>
@@ -62,6 +77,11 @@ export function DaysTogetherCounter({
     seconds: 0,
   })
   const [mounted, setMounted] = useState(false)
+  const [isInView, setIsInView] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const borderRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -87,18 +107,97 @@ export function DaysTogetherCounter({
     return () => clearInterval(interval)
   }, [startDate])
 
+  // GSAP Scroll Animation
+  useEffect(() => {
+    if (!mounted || !containerRef.current) return
+
+    const ctx = gsap.context(() => {
+      // Animate title
+      if (titleRef.current) {
+        gsap.from(titleRef.current, {
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+            onEnter: () => setIsInView(true),
+          },
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power2.out",
+        })
+      }
+
+      // Animate border
+      if (borderRef.current) {
+        gsap.from(borderRef.current, {
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+          scale: 0.95,
+          opacity: 0,
+          duration: 1,
+          ease: "back.out(1.2)",
+          delay: 0.2,
+        })
+      }
+
+      // Animate subtitle
+      if (subtitleRef.current) {
+        gsap.from(subtitleRef.current, {
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+          y: 20,
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          delay: 0.4,
+        })
+      }
+
+      // Animate counter cards with stagger
+      const cards = containerRef.current?.querySelectorAll(".counter-card")
+      if (cards && cards.length > 0) {
+        gsap.from(cards, {
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 70%",
+            toggleActions: "play none none none",
+          },
+          x: -50,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "back.out(1.4)",
+          delay: 0.6,
+        })
+      }
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [mounted])
+
   if (!mounted) {
     return null
   }
 
   return (
-    <div className="text-center max-w-5xl mx-auto">
-      <h3 className="text-lg md:text-xl text-muted-foreground/60 mb-8 uppercase tracking-widest">
+    <div ref={containerRef} className="text-center max-w-5xl mx-auto">
+      <h3
+        ref={titleRef}
+        className="text-lg md:text-xl text-muted-foreground/60 mb-8 uppercase tracking-widest"
+      >
         {partnerName ? `${yourName} & ${partnerName}` : yourName}
       </h3>
 
       <div className="relative p-8 md:p-12">
         <svg
+          ref={borderRef}
           className="absolute inset-0 w-full h-full pointer-events-none"
           style={{ filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))" }}
         >
@@ -119,23 +218,28 @@ export function DaysTogetherCounter({
           />
         </svg>
 
-        <p className="text-sm text-muted-foreground/50 mb-8 uppercase tracking-wider">
+        <p
+          ref={subtitleRef}
+          className="text-sm text-muted-foreground/50 mb-8 uppercase tracking-wider"
+        >
           Estamos juntos há
         </p>
 
         <div className="grid grid-cols-3 md:grid-cols-6 gap-6 md:gap-8">
           <AnimatedNumber
-            value={timeElapsed.years}
+            value={isInView ? timeElapsed.years : 0}
             label={timeElapsed.years === 1 ? "Ano" : "Anos"}
+            index={0}
           />
           <AnimatedNumber
-            value={timeElapsed.months}
+            value={isInView ? timeElapsed.months : 0}
             label={timeElapsed.months === 1 ? "Mês" : "Meses"}
+            index={1}
           />
-          <AnimatedNumber value={timeElapsed.days} label="Dias" />
-          <AnimatedNumber value={timeElapsed.hours} label="Horas" />
-          <AnimatedNumber value={timeElapsed.minutes} label="Minutos" />
-          <AnimatedNumber value={timeElapsed.seconds} label="Segundos" />
+          <AnimatedNumber value={isInView ? timeElapsed.days : 0} label="Dias" index={2} />
+          <AnimatedNumber value={isInView ? timeElapsed.hours : 0} label="Horas" index={3} />
+          <AnimatedNumber value={isInView ? timeElapsed.minutes : 0} label="Minutos" index={4} />
+          <AnimatedNumber value={isInView ? timeElapsed.seconds : 0} label="Segundos" index={5} />
         </div>
       </div>
     </div>
