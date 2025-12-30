@@ -11,6 +11,7 @@ import { MinimalistBackground } from "@/components/minimalist-background"
 import { SmoothScroll } from "@/components/smooth-scroll"
 import { CustomCursor } from "@/components/custom-cursor"
 import { ScrollIndicator } from "@/components/scroll-indicator"
+import { TravelMap } from "@/components/travel-map"
 
 export default function Home() {
   const [clickCount, setClickCount] = useState(0)
@@ -48,6 +49,8 @@ export default function Home() {
       </section>
 
       <TimelineWithImages />
+
+      <TravelMap />
     </main>
   )
 }
