@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
+import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 
 export function LoadingAnimation() {
@@ -12,135 +13,131 @@ export function LoadingAnimation() {
   const loRef = useRef<HTMLSpanElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.set(infinityRef.current, { opacity: 0, scale: 0, rotation: -180 })
-      gsap.set(loRef.current, { opacity: 0, x: 100, scale: 0.5 })
-      gsap.set(mjRef.current, { opacity: 0, x: -100, scale: 0.5 })
-      gsap.set(textContainerRef.current, { scale: 0.8 })
+  useGSAP(() => {
+    gsap.set(infinityRef.current, { opacity: 0, scale: 0, rotation: -180 })
+    gsap.set(loRef.current, { opacity: 0, x: 100, scale: 0.5 })
+    gsap.set(mjRef.current, { opacity: 0, x: -100, scale: 0.5 })
+    gsap.set(textContainerRef.current, { scale: 0.8 })
 
-      const tl = gsap.timeline({
-        onComplete: () => {
-          setTimeout(() => setIsComplete(true), 100)
-        },
-      })
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setTimeout(() => setIsComplete(true), 100)
+      },
+    })
 
-      tl.to(mjRef.current, {
+    tl.to(mjRef.current, {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      duration: 1.2,
+      ease: "elastic.out(1, 0.5)",
+    })
+
+    tl.to(
+      textContainerRef.current,
+      {
+        scale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+      },
+      "-=0.6"
+    )
+
+    tl.to(
+      infinityRef.current,
+      {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1,
+        ease: "back.out(2)",
+      },
+      "-=0.3"
+    )
+
+    tl.to(
+      [mjRef.current, infinityRef.current],
+      {
+        x: -30,
+        duration: 0.6,
+        ease: "power3.inOut",
+      },
+      "+=0.3"
+    )
+
+    tl.to(
+      loRef.current,
+      {
         opacity: 1,
         x: 0,
         scale: 1,
-        duration: 1.2,
+        duration: 1,
         ease: "elastic.out(1, 0.5)",
-      })
+      },
+      "-=0.4"
+    )
 
-      tl.to(
-        textContainerRef.current,
-        {
-          scale: 1,
-          duration: 0.8,
-          ease: "power2.out",
-        },
-        "-=0.6"
-      )
+    tl.to(
+      [mjRef.current, infinityRef.current, loRef.current],
+      {
+        x: 0,
+        duration: 0.8,
+        ease: "power2.inOut",
+      },
+      "+=0.3"
+    )
 
-      tl.to(
-        infinityRef.current,
-        {
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 1,
-          ease: "back.out(2)",
-        },
-        "-=0.3"
-      )
-
-      tl.to(
-        [mjRef.current, infinityRef.current],
-        {
-          x: -30,
-          duration: 0.6,
-          ease: "power3.inOut",
-        },
-        "+=0.3"
-      )
-
-      tl.to(
-        loRef.current,
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 1,
-          ease: "elastic.out(1, 0.5)",
-        },
-        "-=0.4"
-      )
-
-      tl.to(
-        [mjRef.current, infinityRef.current, loRef.current],
-        {
-          x: 0,
-          duration: 0.8,
-          ease: "power2.inOut",
-        },
-        "+=0.3"
-      )
-
-      tl.to(textContainerRef.current, {
-        scale: 1.05,
-        duration: 0.3,
-        ease: "power2.out",
-        yoyo: true,
-        repeat: 1,
-      })
-
-      tl.to(
-        mjRef.current,
-        {
-          x: -200,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.in",
-        },
-        "+=0.2"
-      )
-
-      tl.to(
-        infinityRef.current,
-        {
-          scale: 2,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.in",
-        },
-        "-=0.5"
-      )
-
-      tl.to(
-        loRef.current,
-        {
-          x: 200,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.in",
-        },
-        "-=0.6"
-      )
-
-      tl.to(
-        overlayRef.current,
-        {
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.inOut",
-        },
-        "-=0.2"
-      )
+    tl.to(textContainerRef.current, {
+      scale: 1.05,
+      duration: 0.3,
+      ease: "power2.out",
+      yoyo: true,
+      repeat: 1,
     })
 
-    return () => ctx.revert()
-  }, [])
+    tl.to(
+      mjRef.current,
+      {
+        x: -200,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.in",
+      },
+      "+=0.2"
+    )
+
+    tl.to(
+      infinityRef.current,
+      {
+        scale: 2,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.in",
+      },
+      "-=0.5"
+    )
+
+    tl.to(
+      loRef.current,
+      {
+        x: 200,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.in",
+      },
+      "-=0.6"
+    )
+
+    tl.to(
+      overlayRef.current,
+      {
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.inOut",
+      },
+      "-=0.2"
+    )
+  })
 
   if (isComplete) return null
 

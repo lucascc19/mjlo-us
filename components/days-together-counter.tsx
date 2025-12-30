@@ -1,10 +1,16 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useState, useRef } from "react"
+import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useTimeElapsed } from "@/hooks/use-time-elapsed"
-import { GSAP_ANIMATIONS, GSAP_DURATION, GSAP_EASE, SCROLL_TRIGGER_PRESETS } from "@/lib/gsap-config"
+import {
+  GSAP_ANIMATIONS,
+  GSAP_DURATION,
+  GSAP_EASE,
+  SCROLL_TRIGGER_PRESETS,
+} from "@/lib/gsap-config"
 import { COUNTER_CONFIG, SCROLL_CONFIG } from "@/lib/constants"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -25,21 +31,22 @@ function AnimatedNumber({ value, label, index }: AnimatedNumberProps) {
   const numberRef = useRef<HTMLDivElement>(null)
   const [displayValue, setDisplayValue] = useState(0)
 
-  useEffect(() => {
-    if (!numberRef.current) return
-
-    gsap.to(
-      { val: displayValue },
-      {
-        val: value,
-        duration: COUNTER_CONFIG.ANIMATION_DURATION / 1000,
-        ease: GSAP_EASE.SMOOTH,
-        onUpdate: function () {
-          setDisplayValue(Math.round(this.targets()[0].val))
-        },
-      }
-    )
-  }, [value, displayValue])
+  useGSAP(
+    () => {
+      gsap.to(
+        { val: displayValue },
+        {
+          val: value,
+          duration: COUNTER_CONFIG.ANIMATION_DURATION / 1000,
+          ease: GSAP_EASE.SMOOTH,
+          onUpdate: function () {
+            setDisplayValue(Math.round(this.targets()[0].val))
+          },
+        }
+      )
+    },
+    { dependencies: [value, displayValue] }
+  )
 
   return (
     <div className="space-y-2 overflow-hidden counter-card" data-index={index}>
@@ -61,24 +68,17 @@ export function DaysTogetherCounter({
   yourName = "Nós",
   partnerName,
 }: DaysTogetherCounterProps) {
-  const [mounted, setMounted] = useState(false)
   const [isInView, setIsInView] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
   const borderRef = useRef<SVGSVGElement>(null)
-  
+
   // Usa hook customizado - só calcula quando está visível para otimizar performance
   const timeElapsed = useTimeElapsed(startDate, isInView)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted || !containerRef.current) return
-
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
       if (titleRef.current) {
         gsap.from(titleRef.current, {
           scrollTrigger: {
@@ -133,14 +133,9 @@ export function DaysTogetherCounter({
           ease: "back.out(1.4)",
         })
       }
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [mounted])
-
-  if (!mounted) {
-    return null
-  }
+    },
+    { scope: containerRef }
+  )
 
   return (
     <div ref={containerRef} className="text-center max-w-5xl mx-auto">

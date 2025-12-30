@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, memo } from "react"
 import Image from "next/image"
+import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { FloatingDoodles } from "./ui/floating-doodles"
@@ -109,14 +110,12 @@ const MediaItemComponent = memo(function MediaItemComponent({
 })
 
 export default function TimelineWithImages() {
-  const [mounted, setMounted] = useState(false)
   const [expandedImages, setExpandedImages] = useState<Map<number, number>>(new Map())
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
-    setMounted(true)
     const initialExpanded = new Map<number, number>()
     timelineEvents.forEach((event) => {
       if (event.media.length > 1) {
@@ -126,10 +125,8 @@ export default function TimelineWithImages() {
     setExpandedImages(initialExpanded)
   }, [])
 
-  useEffect(() => {
-    if (!mounted || !sectionRef.current) return
-
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
       if (titleRef.current) {
         gsap.from(titleRef.current, {
           scrollTrigger: {
@@ -220,10 +217,9 @@ export default function TimelineWithImages() {
           }
         }
       })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [mounted])
+    },
+    { scope: sectionRef }
+  )
 
   const handleImageClick = (eventId: number, imageIndex: number) => {
     setExpandedImages((prev) => {
@@ -239,8 +235,6 @@ export default function TimelineWithImages() {
       return newMap
     })
   }
-
-  if (!mounted) return null
 
   return (
     <section id="timeline" ref={sectionRef} className="py-20 px-4 relative">
